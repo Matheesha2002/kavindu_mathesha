@@ -2,6 +2,7 @@ import "./App.css";
 import {createBrowserRouter, RouterProvider} from "react-router";
 import {useState, useEffect} from "react";
 import RootLayout from "./components /Background.tsx";
+import NeuralNetwork from "./components /NeuralNetwork.tsx";
 //import Home from "./pages/Home.tsx";
 //import About from "./pages/About.tsx";
 //import Works from "./pages/Works.tsx";
@@ -23,15 +24,11 @@ import Loader from "./components /Loader.tsx";
  ]);
 
 function App() {
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 3000);
-    }, []);
-
-    return loading ? <Loader/> : <RouterProvider router={router}/>;
+  return (
+    <>
+      <NeuralNetwork />
+    </>
+  );
 }
 
 export default App;

@@ -59,7 +59,7 @@ export default function Loader() {
       }
 
       update() {
-        this.angle += 0.005;
+        this.angle += 0.01;
         this.x0 = this.radX * Math.cos(this.angle);
         this.y0 = this.radY * Math.sin(this.angle);
         this.x1 = this.sx * Math.cos(this.angle);
@@ -81,7 +81,7 @@ export default function Loader() {
     const createCircles = () => {
       for (let i = 0; i < 300; i++) circles.push(new Circle(random(130, 120), random(40, 30)));
       for (let i = 0; i < 100; i++) circles.push(new Circle(random(25), random(25)));
-      for (let i = 0; i < 600; i++)
+      for (let i = 0; i < 200; i++)
         circles.push(new Circle(random(120, 110), random(40, 30), i % 2 === 0 ? 2 : -2, true));
     };
 
