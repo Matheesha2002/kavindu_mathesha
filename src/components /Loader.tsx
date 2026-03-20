@@ -1,108 +1,60 @@
-import { useEffect, useRef } from "react";
+import React from "react";
+import "./Loader.css";
 
-export default function Loader() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const c = canvasRef.current;
-    if (!c) return;
-
-    let W = window.innerWidth;
-    let H = window.innerHeight;
-    c.width = W;
-    c.height = H;
-
-    const ctx = c.getContext("2d")!;
-    let circles: any[] = [];
-    let load = false;
-
-    const random = (max = 1, min = 0) => Math.random() * (max - min) + min;
-    const repos = (a: number, b: number, c: number) => a + (b - a) * c;
-
-    class Circle {
-      radX: number;
-      radY: number;
-      a: number;
-      rotate: boolean;
-      x: number;
-      y: number;
-      angle: number;
-      rad: number;
-      sx: number;
-      sy: number;
-      color: string;
-      x0 = 0; y0 = 0; x1 = 0; y1 = 0;
-
-      constructor(radX: number, radY: number, a = 0, rotate = false) {
-        this.radX = radX;
-        this.radY = radY;
-        this.a = a;
-        this.rotate = rotate;
-        this.x = random(W, -W);
-        this.y = random(H, -H);
-        this.angle = random(Math.PI * 2);
-        this.rad = random(1.5, 0.5);
-        this.sx = random(100);
-        this.sy = 100;
-        this.color = '#FFD700';
-      }
-
-      draw() {
-        ctx.save();
-        ctx.fillStyle = this.color;
-        ctx.translate(this.x + W / 2, this.y + H / 2);
-        if (this.rotate) ctx.rotate(this.a);
-        ctx.beginPath();
-        ctx.arc(0, 0, this.rad, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      update() {
-        this.angle += 0.01;
-        this.x0 = this.radX * Math.cos(this.angle);
-        this.y0 = this.radY * Math.sin(this.angle);
-        this.x1 = this.sx * Math.cos(this.angle);
-        this.y1 = this.sy * Math.sin(this.angle);
-      }
-
-      check() {
-        this.x = repos(this.x, load ? this.x0 : this.x1, 0.03);
-        this.y = repos(this.y, load ? this.y0 : this.y1, 0.03);
-      }
-
-      run() {
-        this.update();
-        this.check();
-        this.draw();
-      }
-    }
-
-    const createCircles = () => {
-      for (let i = 0; i < 300; i++) circles.push(new Circle(random(130, 120), random(40, 30)));
-      for (let i = 0; i < 100; i++) circles.push(new Circle(random(25), random(25)));
-      for (let i = 0; i < 200; i++)
-        circles.push(new Circle(random(120, 110), random(40, 30), i % 2 === 0 ? 2 : -2, true));
-    };
-
-    const animate = () => {
-      ctx.clearRect(0, 0, W, H);
-      circles.forEach(c => c.run());
-      requestAnimationFrame(animate);
-    };
-
-    createCircles();
-    setInterval(() => (load = !load), 3500);
-    animate();
-
-    return () => {
-      circles = [];
-    };
-  }, []);
-
+const Loader: React.FC = () => {
   return (
-    <div style={{ background: "black", height: "100vh" }}>
-      <canvas ref={canvasRef} />
+    <div id="loader-wrapper">
+      <div className="splash">
+        <svg
+          id="welcome"
+          width="716"
+          height="110"
+          viewBox="0 0 716 110"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M145.288 4.488L117.208 105H93.448L74.584 33.432L54.856 105L31.24 105.144L4.168 4.488H25.768L43.48 82.536L63.928 4.488H86.392L105.688 82.104L123.544 4.488H145.288Z"
+            stroke="white"
+            strokeWidth="6"
+          />
+          <path
+            d="M178.612 20.76V45.96H212.452V61.944H178.612V88.584H216.772V105H158.452V4.34399H216.772V20.76H178.612Z"
+            stroke="white"
+            strokeWidth="6"
+          />
+          <path
+            d="M255.252 89.016H288.372V105H235.092V4.488H255.252V89.016Z"
+            stroke="white"
+            strokeWidth="6"
+          />
+          <path
+            d="M296.29 54.6C296.29 44.712 298.498 35.88 302.914 28.104C307.426 20.232 313.522 14.136 321.202 9.816C328.978 5.4 337.666 3.192 347.266 3.192C358.498 3.192 368.338 6.072 376.786 11.832C385.234 17.592 391.138 25.56 394.498 35.736H371.314C369.01 30.936 365.746 27.336 361.522 24.936C357.394 22.536 352.594 21.336 347.122 21.336C341.266 21.336 336.034 22.728 331.426 25.512C326.914 28.2 323.362 32.04 320.77 37.032C318.274 42.024 317.026 47.88 317.026 54.6C317.026 61.224 318.274 67.08 320.77 72.168C323.362 77.16 326.914 81.048 331.426 83.832C336.034 86.52 341.266 87.864 347.122 87.864C352.594 87.864 357.394 86.664 361.522 84.264C365.746 81.768 369.01 78.12 371.314 73.32H394.498C391.138 83.592 385.234 91.608 376.786 97.368C368.434 103.032 358.594 105.864 347.266 105.864C337.666 105.864 328.978 103.704 321.202 99.384C313.522 94.968 307.426 88.872 302.914 81.096C298.498 73.32 296.29 64.488 296.29 54.6Z"
+            stroke="white"
+            strokeWidth="6"
+          />
+          <path
+            d="M458.373 106.008C448.965 106.008 440.325 103.8 432.453 99.384C424.581 94.968 418.341 88.872 413.733 81.096C409.125 73.224 406.821 64.344 406.821 54.456C406.821 44.664 409.125 35.88 413.733 28.104C418.341 20.232 424.581 14.088 432.453 9.67199C440.325 5.256 448.965 3.048 458.373 3.048C467.877 3.048 476.517 5.256 484.293 9.67199C492.165 14.088 498.357 20.232 502.869 28.104C507.477 35.88 509.781 44.664 509.781 54.456C509.781 64.344 507.477 73.224 502.869 81.096C498.357 88.872 492.165 94.968 484.293 99.384C476.421 103.8 467.781 106.008 458.373 106.008Z"
+            stroke="white"
+            strokeWidth="6"
+          />
+          <path
+            d="M634.364 4.488V105H614.204V39.624L587.276 105H572.012L544.94 39.624V105H524.78V4.488H547.676L579.644 79.224L611.612 4.488H634.364Z"
+            stroke="white"
+            strokeWidth="6"
+          />
+          <path
+            d="M674.455 20.76V45.96H708.295V61.944H674.455V88.584H712.615V105H654.295V4.34399H712.615V20.76H674.455Z"
+            stroke="white"
+            strokeWidth="6"
+          />
+        </svg>
+      </div>
+
+      <div className="loader-section section-left"></div>
+      <div className="loader-section section-right"></div>
     </div>
   );
-}
+};
+
+export default Loader;
